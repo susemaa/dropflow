@@ -14,7 +14,7 @@ import {
   G_SZ
 } from './layout-text.js';
 
-import type {Color} from './style.js';
+import type {Color, TextDecoration} from './style.js';
 import type {PaintBackend} from './paint.js';
 import type {CanvasRenderingContext2D as NodeCanvasRenderingContext2D} from 'canvas';
 import type {ShapedItem} from './layout-text.js';
@@ -127,6 +127,7 @@ export default class CanvasPaintBackend implements PaintBackend {
   direction: 'ltr' | 'rtl';
   font: FaceMatch;
   fontSize: number;
+  textDecoration?: TextDecoration | undefined;
   ctx: CanvasRenderingContext2D;
 
   constructor(ctx: CanvasRenderingContext2D) {
@@ -241,6 +242,25 @@ export default class CanvasPaintBackend implements PaintBackend {
       }
     } else {
       this.fastText(x, y, item.paragraph.slice(totalTextStart, totalTextEnd));
+    }
+
+    if (this.textDecoration) {
+      this.ctx.save();
+      this.ctx.strokeStyle = this.fillColor;
+      this.ctx.lineWidth = 1; // Adjust as needed
+      if (this.textDecoration.includes('underline')) {
+        this.ctx.beginPath();
+        this.ctx.moveTo(x, y + 2); // Adjust y position as needed
+        this.ctx.lineTo(x + glyphsWidth(item, totalTextStart, totalTextEnd), y + 2);
+        this.ctx.stroke();
+      }
+      if (this.textDecoration.includes('line-through')) {
+        this.ctx.beginPath();
+        this.ctx.moveTo(x, y - this.fontSize / 3); // Adjust y position as needed
+        this.ctx.lineTo(x + glyphsWidth(item, totalTextStart, totalTextEnd), y - this.fontSize / 3);
+        this.ctx.stroke();
+      }
+      this.ctx.restore();
     }
   }
 

@@ -1,6 +1,6 @@
 import {BlockContainer, Inline, InlineLevel, IfcInline} from './layout-flow.js';
 import {ShapedItem, Paragraph, BackgroundBox, G_CL, G_AX, G_SZ} from './layout-text.js';
-import {Color} from './style.js';
+import {Color, TextDecoration} from './style.js';
 import {Box, BoxArea} from './layout-box.js';
 import {binarySearchOf} from './util.js';
 
@@ -13,6 +13,7 @@ export interface PaintBackend {
   direction: 'ltr' | 'rtl';
   font: FaceMatch;
   fontSize: number;
+  textDecoration?: TextDecoration;
   edge(x: number, y: number, length: number, side: 'top' | 'right' | 'bottom' | 'left'): void;
   text(x: number, y: number, item: ShapedItem, textStart: number, textEnd: number, isColorBoundary?: boolean): void;
   rect(x: number, y: number, w: number, h: number): void;
@@ -100,6 +101,7 @@ function drawText(
       b.fontSize = style.fontSize;
       b.font = match;
       b.direction = item.attrs.level & 1 ? 'rtl' : 'ltr';
+      b.textDecoration = style.textDecoration;
       b.text(tx, containingBlock.y + item.y, item, start, end, isColorBoundary);
 
       tx += ax / item.match.face.upem * style.fontSize;

@@ -120,6 +120,12 @@ type Float = 'left' | 'right' | 'none';
 
 type Clear = 'left' | 'right' | 'both' | 'none';
 
+export type TextDecoration = 
+  | 'underline' 
+  | 'line-through' 
+  | 'underline line-through' 
+  | 'line-through underline';
+
 export interface DeclaredStyleProperties {
   zoom?: number | Percentage | Inherited | Initial;
   whiteSpace?: WhiteSpace | Inherited | Initial;
@@ -173,6 +179,7 @@ export interface DeclaredStyleProperties {
   wordBreak?: 'break-word' | 'normal' | Inherited | Initial;
   overflowWrap?: 'anywhere' | 'break-word' | 'normal' | Inherited | Initial;
   overflow?: 'visible' | 'hidden' | Inherited | Initial;
+  textDecoration?: TextDecoration | Inherited | Initial;
 }
 
 const EMPTY_ARRAY: readonly number[] = Object.freeze([]);
@@ -280,6 +287,7 @@ interface ComputedStyle {
   wordBreak: 'break-word' | 'normal';
   overflowWrap: 'anywhere' | 'break-word' | 'normal';
   overflow: 'visible' | 'hidden';
+  textDecoration: TextDecoration;
 }
 
 function resolvePercent(box: BlockContainer | IfcInline, cssVal: number | {value: number, unit: '%'}) {
@@ -357,6 +365,7 @@ export class Style {
   wordBreak: 'break-word' | 'normal';
   overflowWrap: 'anywhere' | 'break-word' | 'normal';
   overflow: 'visible' | 'hidden';
+  textDecoration: TextDecoration;
 
   // This section reduces to used values as much as possible
   // Be careful accessing off of "this" since these are called in the ctor
@@ -437,6 +446,7 @@ export class Style {
     this.wordBreak = style.wordBreak;
     this.overflowWrap = style.overflowWrap;
     this.overflow = style.overflow;
+    this.textDecoration = style.textDecoration;
   }
 
   getTextAlign() {

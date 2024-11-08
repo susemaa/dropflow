@@ -1,7 +1,7 @@
 import {getMetrics, ShapedItem} from './layout-text.js';
 import {firstCascadeItem} from './text-font.js';
 
-import type {Color} from './style.js';
+import type {Color, TextDecoration} from './style.js';
 import type {PaintBackend} from './paint.js';
 import type {FaceMatch} from './text-font.js';
 
@@ -22,6 +22,7 @@ export default class HtmlPaintBackend implements PaintBackend {
   lineWidth: number;
   direction: 'ltr' | 'rtl';
   font: FaceMatch;
+  textDecoration?: TextDecoration | undefined;
   fontSize: number;
 
   constructor() {
@@ -76,7 +77,8 @@ export default class HtmlPaintBackend implements PaintBackend {
       whiteSpace: 'pre',
       direction: this.direction,
       unicodeBidi: 'bidi-override',
-      color: `rgba(${r}, ${g}, ${b}, ${a})`
+      color: `rgba(${r}, ${g}, ${b}, ${a})`,
+      textDecoration: this.textDecoration || "",
     });
     this.s += `<div style="${style}">${encode(text)}</div>`;
   }
